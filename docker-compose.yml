@@ -1,0 +1,32 @@
+version: '3.1'
+
+services:
+  pgadmin4-master:
+    image: fenglc/pgadmin4
+    ports:
+      - 5050:5050
+    links:
+      - postgres:postgres
+    environment:
+      DEFAULT_USER: pgbouncer_database
+      DEFAULT_PASSWORD: 12345678
+  postgres:
+    image: postgres:9.6.5
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    #ports:
+    #  - 5432:5432            
+  pgbouncer:
+    image: brainsam/pgbouncer:1.7.2
+    environment:
+      DB_HOST: postgres
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      DB_PORT: 5432
+      POOL_MODE: transaction
+    links:
+      - postgres:postgres
+    ports:
+      - 6432:6432
